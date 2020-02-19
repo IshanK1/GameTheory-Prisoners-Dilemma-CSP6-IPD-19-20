@@ -16,70 +16,61 @@ Section 1 - Player vs. Player
 --------------------------------------------------------------------------------
 Each column shows pts//round earned against each other player:
              P0     P1     P2     P3
-vs. P0 :      0      0     42      0
-vs. P1 :      0      0     32      0
-vs. P2 :   -213   -182      0   -145
-vs. P3 :      0      0    -87      0
-TOTAL  :   -213   -182    -13   -145
+vs. P0 :      0      0     41      0
+vs. P1 :      0      0     37      0
+vs. P2 :   -210   -188      0   -176
+vs. P3 :      0      0    -90      0
+TOTAL  :   -210   -188    -12   -176
 --------------------------------------------------------------------------------
 Section 2 - Leaderboard
 --------------------------------------------------------------------------------
 Average points per round:
 Team name (P#):  Score      with strategy name
-1*Team to (P2):         -4 points with Random (leaning collude)                
-E3        (P3):        -37 points with Collude but retaliate                   
-2*Team to (P1):        -46 points with Collude then Mimic                      
-3*Team to (P0):        -54 points with Trust, then don't forgive               
+1*Team to (P2):         -3 points with Random (leaning collude)                
+E3        (P3):        -44 points with Collude but retaliate                   
+2*Team to (P1):        -47 points with Collude then Mimic                      
+3*Team to (P0):        -53 points with Trust, then don't forgive               
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 example0--------------------------------------------------------------------------------
-####
-# Each team's file must define four tokens:
-#     team_name: a string
-#     strategy_name: a string
-#     strategy_description: a string
-#     move: A function that returns 'c' or 'b'
-####
 
+
+'''Information and description on this strategy.'''
 team_name = '3*Team to be determined*'
 strategy_name = "Trust, then don't forgive"
 strategy_description = 'Collude first. If opponent betrays at any point in the game, betray forever.'
-    
+   
 def move(my_history, their_history, my_score, their_score):
-  '''Make my move based on the history with this player.
+  '''
+  This strategy Colludes when the length of my_history = 0. Then, colludes until betrayed, then always betrays.
+
+  history: a string with one letter (c or b) per round that has been played with this opponent.
+  their_history: a string of the same length as history, possibly empty. 
+  The first round between these two players is my_history[0] and their_history[0]
+  The most recent round is my_history[-1] and their_history[-1]
     
-    history: a string with one letter (c or b) per round that has been played with this opponent.
-    their_history: a string of the same length as history, possibly empty. 
-    The first round between these two players is my_history[0] and their_history[0]
-    The most recent round is my_history[-1] and their_history[-1]
-    
-    Returns 'c' or 'b' for collude or betray.
+  Returns 'c' or 'b' for collude or betray.
   '''
   # This player colludes on even numbered rounds (first round is round #0).
-  if len(str(my_history)) == 0: # It's the first round; collude.
+  if len(str(my_history)) == 0: # It's the first round, so collude.
     return 'c'
-  elif len(str(my_history)) > 0 and their_history == 'b':
+  elif len(str(my_history)) > 0 and their_history == 'b':#Executes if opponent betrays in a round after the first one, will betray forever. 
     return 'b'
-  else:
+  else:#Executes if the opponent never betrays 
     return 'c'
-    --------------------------------------------------------------------------------
-example1--------------------------------------------------------------------------------
-####
-# Each team's file must define four tokens:
-#     team_name: a string
-#     strategy_name: a string
-#     strategy_description: a string
-#     move: A function that returns 'c' or 'b'
-####
 
+move(0,0,0,0)#Calls the function with appropriate starting values--------------------------------------------------------------------------------
+example1--------------------------------------------------------------------------------
+
+'''Information and description on this strategy.'''
 team_name = '2*Team to be determined*'
 strategy_name = "Collude then Mimic "
 strategy_description = "Collude, then start to mimic whatever the last person's choice was."
     
 def move(my_history, their_history, my_score, their_score):
-  '''Make my move based on the history with this player.
-  
-  history: a string with one letter (c or b) per round that has been played with this opponent.
+  '''
+  This strategy colludes first. Then, always mimics the other player's choice to collud or betray based on the value of "their_history'. 
+
   their_history: a string of the same length as history, possibly empty. 
   The first round between these two players is my_history[0] and their_history[0]
   The most recent round is my_history[-1] and their_history[-1]
@@ -94,33 +85,34 @@ def move(my_history, their_history, my_score, their_score):
   else:
     return 'c'
 
-move(0,0,0,0)--------------------------------------------------------------------------------
+move(0,0,0,0)#Calls the function with appropriate starting values--------------------------------------------------------------------------------
 example2--------------------------------------------------------------------------------
-####
-# Each team's file must define four tokens:
-#     team_name: a string
-#     strategy_name: a string
-#     strategy_description: a string
-#     move: A function that returns 'c' or 'b'
-####
 
+'''Information and description on this strategy.'''
 team_name = '1*Team to be determined*'
 strategy_name = 'Random (leaning collude)'
 strategy_description = 'Random choice. 66% chance of colluding, 33% chance of betraying.'
 
-
 import random
 
 def move(my_history, their_history, my_score, their_score):
-  '''Makes choice based on weighted random choice (but leans towards colluding) Does not account for opponent's or self's history since it always chooses randomly. '''
+  '''Makes choice based on weighted random choice (but leans towards colluding) Does not account for opponent's or self's history since it always chooses randomly. 
+  
+  their_history: a string of the same length as history, possibly empty. 
+  The first round between these two players is my_history[0] and their_history[0]
+  The most recent round is my_history[-1] and their_history[-1]
+    
+  Returns 'c' or 'b' for collude or betray.
+  '''
   random_choice = random.randint(0,4)
   if random_choice >= 2:
     return 'c'
   else:
     return 'b'
     
-'''Since the strategy uses a weighted random choice, it doesn't need to know any stats about itself or it's opponent.'''
-move(0,0,0,0)--------------------------------------------------------------------------------
+'''Since the strategy uses a weighted random choice, it doesn't need to know any information about itself or it's opponent's past history.'''
+
+move(0,0,0,0)#Calls the function with appropriate starting values--------------------------------------------------------------------------------
 example3--------------------------------------------------------------------------------
 ####
 # Each team's file must define four tokens:
@@ -159,17 +151,17 @@ Section 3 - Game Data for Team 3*Team to be determined*
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
--213 pt//round: 3*Team to be determined*(P0) "Trust, then don't forgive"
-42 pt//ound: 1*Team to be determined*(P2) "Random (leaning collude)"
-CCccccCCCcCcCCcccCcCcCcCccCCcCcCcCCCcCcCCcCCcccCCcCcCCCCcCCCcCCCcCCcCCCCCcCCCcCC
-CCBBBBCCCBCBCCBBBCBCBCBCBBCCBCBCBCCCBCBCCBCCBBBCCBCBCCCCBCCCBCCCBCCBCCCCCBCCCBCC
+-210 pt//round: 3*Team to be determined*(P0) "Trust, then don't forgive"
+41 pt//ound: 1*Team to be determined*(P2) "Random (leaning collude)"
+CCCccCCCcCccCCcCCCccCcCCCCcCCCcCCCcCCCcCcccCCCcCcCCcCCcCCCccCCCcCCcCCCcCcCcCCCcc
+CCCBBCCCBCBBCCBCCCBBCBCCCCBCCCBCCCBCCCBCBBBCCCBCBCCBCCBCCCBBCCCBCCBCCCBCBCBCCCBB
 
-CcCcCCCCCCCcCCcccccCcCCcCccccCCCcCCcCCCccCccCCccccCCCccCcCcCCCcCcCcc
-CBCBCCCCCCCBCCBBBBBCBCCBCBBBBCCCBCCBCCCBBCBBCCBBBBCCCBBCBCBCCCBCBCBB
+CcCCCCCccCcCccccCCcCcCcCcCcCCcCCCcCCCcCcCcccCCCcCcccccCCcCcCccCCCcCccCcCCCcCcccC
+CBCCCCCBBCBCBBBBCCBCBCBCBCBCCBCCCBCCCBCBCBBBCCCBCBBBBBCCBCBCBBCCCBCBBCBCCCBCBBBC
 
 --------------------------------------------------------------------------------
 0 pt//round: 3*Team to be determined*(P0) "Trust, then don't forgive"
@@ -177,8 +169,11 @@ CBCBCCCCCCCBCCBBBBBCBCCBCBBBBCCCBCCBCCCBBCBBCCBBBBCCCBBCBCBCCCBCBCBB
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -189,17 +184,20 @@ Section 3 - Game Data for Team 2*Team to be determined*
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
--182 pt//round: 2*Team to be determined*(P1) "Collude then Mimic "
-32 pt//ound: 1*Team to be determined*(P2) "Random (leaning collude)"
-cBcCCCCcCcCCccCCccCCcCcccCCCCCCcCCCccCCCCCCccCcCCCcCcCcCCCCCCCccCcCCCCcCcCcCCCcc
-BcBCCCCBCBCCBBCCBBCCBCBBBCCCCCCBCCCBBCCCCCCBBCBCCCBCBCBCCCCCCCBBCBCCCCBCBCBCCCBB
+-188 pt//round: 2*Team to be determined*(P1) "Collude then Mimic "
+37 pt//ound: 1*Team to be determined*(P2) "Random (leaning collude)"
+CcCCCcCCcCCcccccCCcCCcCCCcCcccCCCccCCCccCccCCCCCcCCCCCCccCccCccCCCcCCCCCCCcCCcCc
+CBCCCBCCBCCBBBBBCCBCCBCCCBCBBBCCCBBCCCBBCBBCCCCCBCCCCCCBBCBBCBBCCCBCCCCCCCBCCBCB
 
-CcccccCCCCCCcCCCCcCCcCCCCccCCCcccCCCcCcCcCcCCcCCCCcC
-CBBBBBCCCCCCBCCCCBCCBCCCCBBCCCBBBCCCBCBCBCBCCBCCCCBC
+CCcCCcCCCcCCCCCcccCcCcCCccCCcCCcccCCccCCCCcCcCCcCcCcCCCCcCCCCCcCCCCCCCcCccccCccC
+CCBCCBCCCBCCCCCBBBCBCBCCBBCCBCCBBBCCBBCCCCBCBCCBCBCBCCCCBCCCCCBCCCCCCCBCBBBBCBBC
+
+CCCCccccCCCCCCCcCcCCcCCcccCccCCCCCcCCcCC
+CCCCBBBBCCCCCCCBCBCCBCCBBBCBBCCCCCBCCBCC
 
 --------------------------------------------------------------------------------
 0 pt//round: 2*Team to be determined*(P1) "Collude then Mimic "
@@ -207,41 +205,41 @@ CBBBBBCCCCCCBCCCCBCCBCCCCBBCCCBBBCCCBCBCBCBCCBCCCCBC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
 Section 3 - Game Data for Team 1*Team to be determined*
 --------------------------------------------------------------------------------
-42 pt//round: 1*Team to be determined*(P2) "Random (leaning collude)"
--213 pt//ound: 3*Team to be determined*(P0) "Trust, then don't forgive"
-CCBBBBCCCBCBCCBBBCBCBCBCBBCCBCBCBCCCBCBCCBCCBBBCCBCBCCCCBCCCBCCCBCCBCCCCCBCCCBCC
-CCccccCCCcCcCCcccCcCcCcCccCCcCcCcCCCcCcCCcCCcccCCcCcCCCCcCCCcCCCcCCcCCCCCcCCCcCC
+41 pt//round: 1*Team to be determined*(P2) "Random (leaning collude)"
+-210 pt//ound: 3*Team to be determined*(P0) "Trust, then don't forgive"
+CCCBBCCCBCBBCCBCCCBBCBCCCCBCCCBCCCBCCCBCBBBCCCBCBCCBCCBCCCBBCCCBCCBCCCBCBCBCCCBB
+CCCccCCCcCccCCcCCCccCcCCCCcCCCcCCCcCCCcCcccCCCcCcCCcCCcCCCccCCCcCCcCCCcCcCcCCCcc
 
-CBCBCCCCCCCBCCBBBBBCBCCBCBBBBCCCBCCBCCCBBCBBCCBBBBCCCBBCBCBCCCBCBCBB
-CcCcCCCCCCCcCCcccccCcCCcCccccCCCcCCcCCCccCccCCccccCCCccCcCcCCCcCcCcc
-
---------------------------------------------------------------------------------
-32 pt//round: 1*Team to be determined*(P2) "Random (leaning collude)"
--182 pt//ound: 2*Team to be determined*(P1) "Collude then Mimic "
-BcBCCCCBCBCCBBCCBBCCBCBBBCCCCCCBCCCBBCCCCCCBBCBCCCBCBCBCCCCCCCBBCBCCCCBCBCBCCCBB
-cBcCCCCcCcCCccCCccCCcCcccCCCCCCcCCCccCCCCCCccCcCCCcCcCcCCCCCCCccCcCCCCcCcCcCCCcc
-
-CBBBBBCCCCCCBCCCCBCCBCCCCBBCCCBBBCCCBCBCBCBCCBCCCCBC
-CcccccCCCCCCcCCCCcCCcCCCCccCCCcccCCCcCcCcCcCCcCCCCcC
+CBCCCCCBBCBCBBBBCCBCBCBCBCBCCBCCCBCCCBCBCBBBCCCBCBBBBBCCBCBCBBCCCBCBBCBCCCBCBBBC
+CcCCCCCccCcCccccCCcCcCcCcCcCCcCCCcCCCcCcCcccCCCcCcccccCCcCcCccCCCcCccCcCCCcCcccC
 
 --------------------------------------------------------------------------------
--87 pt//round: 1*Team to be determined*(P2) "Random (leaning collude)"
--145 pt//ound: E3(P3) "Collude but retaliate"
-BbCCBcBcBbBbCCBcBcBcCBcCCCCCCBcCBbBbBcCCCBbBbCCCBcCCCCCBcCCBcCCCCCCBcBbBcCCCCBcB
-cbCCcBcBcbcbCCcBcBcBCcBCCCCCCcBCcbcbcBCCCcbcbCCCcBCCCCCcBCCcBCCCCCCcBcbcBCCCCcBc
+37 pt//round: 1*Team to be determined*(P2) "Random (leaning collude)"
+-188 pt//ound: 2*Team to be determined*(P1) "Collude then Mimic "
+CBCCCBCCBCCBBBBBCCBCCBCCCBCBBBCCCBBCCCBBCBBCCCCCBCCCCCCBBCBBCBBCCCBCCCCCCCBCCBCB
+CcCCCcCCcCCcccccCCcCCcCCCcCcccCCCccCCCccCccCCCCCcCCCCCCccCccCccCCCcCCCCCCCcCCcCc
 
-bCCCCCBcBcBbCBcCCCCBcCCBcBbCCCCBbCCBcBcCCBcBbCCBbBcCCBcCCCCCCBcBcCCCCCBbCBcCCBcB
-bCCCCCcBcBcbCcBCCCCcBCCcBcbCCCCcbCCcBcBCCcBcbCCcbcBCCcBCCCCCCcBcBCCCCCcbCcBCCcBc
+CCBCCBCCCBCCCCCBBBCBCBCCBBCCBCCBBBCCBBCCCCBCBCCBCBCBCCCCBCCCCCBCCCCCCCBCBBBBCBBC
+CCcCCcCCCcCCCCCcccCcCcCCccCCcCCcccCCccCCCCcCcCCcCcCcCCCCcCCCCCcCCCCCCCcCccccCccC
 
-cBcB
-BcBc
+CCCCBBBBCCCCCCCBCBCCBCCBBBCBBCCCCCBCCBCC
+CCCCccccCCCCCCCcCcCCcCCcccCccCCCCCcCCcCC
+
+--------------------------------------------------------------------------------
+-90 pt//round: 1*Team to be determined*(P2) "Random (leaning collude)"
+-176 pt//ound: E3(P3) "Collude but retaliate"
+BbBbCCBbCCBbCCBcBcBbCCBbCCCBbCCCCBcBcCBcCBbCBcCBbCCBcBcCBcBcBbCCBbBcBbCCCCCCBcCB
+cbcbCCcbCCcbCCcBcBcbCCcbCCCcbCCCCcBcBCcBCcbCcBCcbCCcBcBCcBcBcbCCcbcBcbCCCCCCcBCc
+
+cBcBbCCBbCCBbBbBcBcBcCBbBcCCCCCCCBcCCCCBbCCBbBbCBcCBcBcCBbCCCCBcBcBcBbCBc
+BcBcbCCcbCCcbcbcBcBcBCcbcBCCCCCCCcBCCCCcbCCcbcbCcBCcBcBCcbCCCCcBcBcBcbCcB
 
 --------------------------------------------------------------------------------
 --------------------------------------------------------------------------------
@@ -252,8 +250,11 @@ Section 3 - Game Data for Team E3
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+
+CCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
 0 pt//round: E3(P3) "Collude but retaliate"
@@ -261,19 +262,16 @@ CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
-CCCCCCCCCCCCCCCCCCCCCCCC
-CCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 
 --------------------------------------------------------------------------------
--145 pt//round: E3(P3) "Collude but retaliate"
--87 pt//ound: 1*Team to be determined*(P2) "Random (leaning collude)"
-cbCCcBcBcbcbCCcBcBcBCcBCCCCCCcBCcbcbcBCCCcbcbCCCcBCCCCCcBCCcBCCCCCCcBcbcBCCCCcBc
-BbCCBcBcBbBbCCBcBcBcCBcCCCCCCBcCBbBbBcCCCBbBbCCCBcCCCCCBcCCBcCCCCCCBcBbBcCCCCBcB
+-176 pt//round: E3(P3) "Collude but retaliate"
+-90 pt//ound: 1*Team to be determined*(P2) "Random (leaning collude)"
+cbcbCCcbCCcbCCcBcBcbCCcbCCCcbCCCCcBcBCcBCcbCcBCcbCCcBcBCcBcBcbCCcbcBcbCCCCCCcBCc
+BbBbCCBbCCBbCCBcBcBbCCBbCCCBbCCCCBcBcCBcCBbCBcCBbCCBcBcCBcBcBbCCBbBcBbCCCCCCBcCB
 
-bCCCCCcBcBcbCcBCCCCcBCCcBcbCCCCcbCCcBcBCCcBcbCCcbcBCCcBCCCCCCcBcBCCCCCcbCcBCCcBc
-bCCCCCBcBcBbCBcCCCCBcCCBcBbCCCCBbCCBcBcCCBcBbCCBbBcCCBcCCCCCCBcBcCCCCCBbCBcCCBcB
-
-BcBc
-cBcB
+BcBcbCCcbCCcbcbcBcBcBCcbcBCCCCCCCcBCCCCcbCCcbcbCcBCcBcBCcbCCCCcBcBcBcbCcB
+cBcBbCCBbCCBbBbBcBcBcCBbBcCCCCCCCBcCCCCBbCCBbBbCBcCBcBcCBbCCCCBcBcBcBbCBc
 
 --------------------------------------------------------------------------------
