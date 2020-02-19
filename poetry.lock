@@ -1,0 +1,14 @@
+[[package]]
+category = "main"
+description = "The funniest joke in the world"
+name = "example2"
+optional = false
+python-versions = "*"
+version = "0.1"
+
+[metadata]
+content-hash = "164e0263801bf76468d0da33beb74b6dfc50c97855ede0b9de65d09681560311"
+python-versions = "^3.7"
+
+[metadata.hashes]
+example2 = ["7b324642ce6bc9610a5ae1c85ca50dededd42850436114b23bddb31fba13a070", "80326f856fce8eff9a04235309d81af31171efddb1ed4d8634a2cc3d9b45af53"]

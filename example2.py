@@ -6,23 +6,20 @@
 #     move: A function that returns 'c' or 'b'
 ####
 
-team_name = 'E2'
-strategy_name = 'Alternate'
-strategy_description = 'Collude, then alternate.'
-    
+team_name = '1*Team to be determined*'
+strategy_name = 'Random (leaning collude)'
+strategy_description = 'Random choice. 66% chance of colluding, 33% chance of betraying.'
+
+
+import random
+
 def move(my_history, their_history, my_score, their_score):
-    '''Make my move based on the history with this player.
+  '''Makes choice based on weighted random choice (but leans towards colluding) Does not account for opponent's or self's history since it always chooses randomly. '''
+  random_choice = random.randint(0,4)
+  if random_choice >= 2:
+    return 'c'
+  else:
+    return 'b'
     
-    history: a string with one letter (c or b) per round that has been played with this opponent.
-    their_history: a string of the same length as history, possibly empty. 
-    The first round between these two players is my_history[0] and their_history[0]
-    The most recent round is my_history[-1] and their_history[-1]
-    
-    Returns 'c' or 'b' for collude or betray.
-    '''
-    # This player colludes on even numbered rounds (first round is round #0).
-    if len(my_history)%2 == 0:
-        return 'c'
-    else:
-        return 'b'
-    
+'''Since the strategy uses a weighted random choice, it doesn't need to know any stats about itself or it's opponent.'''
+move(0,0,0,0)
