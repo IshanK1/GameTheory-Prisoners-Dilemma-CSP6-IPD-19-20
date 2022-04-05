@@ -1,4 +1,4 @@
-# csp6-IPD-19-20
+# GameTheory-Prisoners-Dilemma-CSP6-IPD-19-20
 
 ## Ishan Kachroo (Game Theory Project)
 
